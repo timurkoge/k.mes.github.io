@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Mes Messenger</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e86de;
+            --secondary-color: #f5f6fa;
+            --text-color: #2f3640;
+            --text-light: #7f8fa6;
+            --border-color: #dcdde1;
+            --error-color: #e84118;
+            --user-1-color: #2ecc71;
+            --user-2-color: #f1c40f;
+            --user-3-color: #e74c3c;
+            --user-4-color: #3498db;
+            --dark-bg: #121212;
+            --dark-text: #f0f0f0;
+            --dark-border: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--dark-bg);
+                color: var(--dark-text);
+            }
+            .sidebar, .chat-header, .message-input-container {
+                background-color: #1e1e1e;
+                border-color: var(--dark-border);
+            }
+            .message-text, .file-message {
+                background-color: #2d2d2d;
+            }
+            .my-message .message-text {
+                background-color: var(--primary-color);
+            }
+            .search-input, .message-input {
+                background-color: #252525;
+                color: var(--dark-text);
+                border-color: var(--dark-border);
+            }
+        }
+
+        /* Auth Page */
+        .auth-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            padding: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        /* Все остальные стили из предыдущей версии */
+        /* ... (полный CSS из предыдущего ответа) ... */
+
+        /* Дополнения для исправления багов */
+        .message {
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        
+        .context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: var(--primary-color);
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            .message-text {
+                max-width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Весь HTML из предыдущей версии -->
+    <!-- ... -->
+    
+    <script src="script.js"></script>
+</body>
+</html>
