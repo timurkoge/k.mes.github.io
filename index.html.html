@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Mes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Страница авторизации -->
+    <div class="auth-container" id="auth-container">
+        <div class="logo">K-Mes</div>
+        <div class="auth-form">
+            <h2>Войдите в аккаунт</h2>
+            <input type="text" id="username" placeholder="Имя пользователя" required>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <button id="login-btn">Войти</button>
+            <p id="error-msg" class="error"></p>
+        </div>
+    </div>
+
+    <!-- Основной интерфейс мессенджера (скрыт до авторизации) -->
+    <div class="app-container" id="app-container">
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-avatar" id="user-avatar"></div>
+                <div class="user-name" id="user-name"></div>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Поиск" class="search-input">
+            </div>
+            <div class="chats-list">
+                <div class="chat-item active" data-chat="group-chat">
+                    <div class="chat-avatar group-avatar">К</div>
+                    <div class="chat-info">
+                        <div class="chat-name">Общий чат</div>
+                        <div class="chat-preview">Все участники здесь</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-chat="Артур">
+                    <div class="chat-avatar" style="background-color: #2ecc71;">А</div>
+                    <div class="chat-info">
+                        <div class="chat-name">Артур</div>
+                        <div class="chat-preview">Привет! Как дела?</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-chat="Дамир">
+                    <div class="chat-avatar" style="background-color: #f1c40f;">Д</div>
+                    <div class="chat-info">
+                        <div class="chat-name">Дамир</div>
+                        <div class="chat-preview">Где встречаемся?</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-chat="Карим">
+                    <div class="chat-avatar" style="background-color: #e74c3c;">К</div>
+                    <div class="chat-info">
+                        <div class="chat-name">Карим</div>
+                        <div class="chat-preview">Отправил тебе файл</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-chat="Тимур">
+                    <div class="chat-avatar" style="background-color: #3498db;">Т</div>
+                    <div class="chat-info">
+                        <div class="chat-name">Тимур</div>
+                        <div class="chat-preview">Завтра в 10?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основное окно чата -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar" id="current-chat-avatar">К</div>
+                    <div class="chat-name" id="current-chat-name">Общий чат</div>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" id="clear-chat"><i class="fas fa-trash-alt"></i></button>
+                    <button class="action-btn" id="search-in-chat"><i class="fas fa-search"></i></button>
+                    <button class="action-btn" id="more-actions"><i class="fas fa-ellipsis-v"></i></button>
+                </div>
+            </div>
+            <div class="messages-container" id="messages-container">
+                <!-- Сообщения будут добавляться здесь -->
+            </div>
+            <div class="message-input-container">
+                <button class="attach-btn"><i class="fas fa-paperclip"></i></button>
+                <input type="text" class="message-input" placeholder="Написать сообщение...">
+                <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
