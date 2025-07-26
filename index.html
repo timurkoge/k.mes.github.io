@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Mes Messenger</title>
+    <link rel="shortcut icon" href="https://i.postimg.cc/LsfhSnXg/photo-2025-07-26-12-44-44.png" type="image/img">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e86de;
+            --secondary-color: #f5f6fa;
+            --text-color: #2f3640;
+            --text-light: #7f8fa6;
+            --border-color: #dcdde1;
+            --online-color: #44bd32;
+            --error-color: #e84118;
+            --user-1-color: #2ecc71;
+            --user-2-color: #f1c40f;
+            --user-3-color: #e74c3c;
+            --user-4-color: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f6fa;
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Auth Page */
+        .auth-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            padding: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .auth-form button:hover {
+            background-color: #1e6fd9;
+        }
+
+        .error {
+            color: var(--error-color);
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Main App */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            display: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        #logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #logout-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .search-container {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chats-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            display: flex;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .chat-item:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .chat-item.active {
+            background-color: #e6f2ff;
+        }
+
+        .chat-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .group-avatar {
+            background: linear-gradient(135deg, var(--user-1-color), var(--user-2-color), var(--user-3-color), var(--user-4-color));
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-preview {
+            font-size: 13px;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            height: 60px;
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .chat-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header .chat-avatar {
+            width: 35px;
+            height: 35px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .chat-actions {
+            display: flex;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 16px;
+            margin-left: 15px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f0f2f5;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .message-text {
+            background-color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+            word-wrap: break-word;
+        }
+
+        .sticker-message {
+            font-size: 48px;
+            line-height: 1;
+            padding: 5px;
+            background: none;
+            box-shadow: none;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 3px;
+            text-align: right;
+        }
+
+        .my-message {
+            justify-content: flex-end;
+        }
+
+        .my-message .message-content {
+            align-items: flex-end;
+        }
+
+        .my-message .message-text {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .message-input-container {
+            height: 60px;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            font-size: 15px;
+            margin: 0 10px;
+        }
+
+        .send-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sticker-preview {
+            font-size: 48px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .stickers-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .sticker-btn {
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+            background: none;
+            padding: 10px;
+        }
+
+        .sticker-btn:hover {
+            transform: scale(1.5);
+        }
+
+        .sticker-send-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .sticker-send-btn:hover {
+            background-color: #1e6fd9;
+        }
+
+        /* File message */
+        .file-message {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .file-icon {
+            margin-right: 10px;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        .file-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-download {
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                display: none;
+            }
+            
+            .sidebar.active {
+                display: flex;
+            }
+            
+            .chat-container {
+                display: none;
+            }
+            
+            .chat-container.active {
+                display: flex;
+            }
+        }
+
+        /* Добавьте эти стили в конец файла */
+
+        /* Отступы для сообщений */
+        .messages-container {
+            padding: 20px 15px 10px 15px;
+        }
+
+        /* Увеличенные стикеры */
+        .sticker-message {
+            font-size: 56px;
+            line-height: 1.2;
+            padding: 10px;
+            background: none;
+            box-shadow: none;
+            display: inline-block;
+        }
+
+        /* Улучшенные отступы для файлов */
+        .file-message {
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        /* Гарантированный отступ после заголовка чата */
+        .chat-header {
+            padding-bottom: 5px;
+        }
+
+        .message {
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--primary-color);
+            width: 0;
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .message-text {
+                max-width: 80%;
+            }
+        }
+        /* Добавляем в конец стилей */
+        .chat-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 100;
+            padding: 5px 0;
+        }
+
+        .chat-menu:hover .dropdown-menu {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Стили для превью изображений */
+        .image-message {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .image-message:hover {
+            transform: scale(1.03);
+        }
+
+        .image-preview-container {
+            position: relative;
+            margin: 5px 0;
+        }
+
+        /* Модальное окно для полноразмерного просмотра */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close-image-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        /* Индикатор набора текста */
+        .typing-indicator {
+            font-size: 12px;
+            color: var(--text-light);
+            font-style: italic;
+            height: 18px;
+            padding: 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Страница авторизации -->
+    <div class="auth-container" id="auth-container">
+        <div class="logo">K-Mes</div>
+        <div class="auth-form">
+            <h2>Вход в аккаунт</h2>
+            <input type="text" id="username" placeholder="Ваше имя" required>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <button id="login-btn">Войти</button>
+            <p id="error-msg" class="error"></p>
+        </div>
+    </div>
+
+    <!-- Основной интерфейс мессенджера -->
+    <div class="app-container" id="app-container">
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-avatar" id="user-avatar"></div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name"></div>
+                    <button id="logout-btn" title="Выйти"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" placeholder="Поиск..." class="search-input">
+            </div>
+            
+            <div class="chats-list" id="chats-list">
+                <!-- Список чатов будет генерироваться через JS -->
+            </div>
+        </div>
+
+        <!-- Окно чата -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <div class="chat-avatar" id="current-chat-avatar"></div>
+                    <div class="chat-name" id="current-chat-name"></div>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" id="attach-btn" title="Прикрепить файл"><i class="fas fa-paperclip"></i></button>
+                    <button class="action-btn" id="stickers-btn" title="Стикеры"><i class="far fa-smile"></i></button>
+                    <button class="action-btn" id="clear-chat" title="Очистить чат"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                <!-- Внутри chat-header, после chat-actions -->
+                <div class="chat-menu">
+                    <button class="action-btn" id="chat-menu-btn" title="Меню чата"><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="dropdown-menu">
+                        <div class="menu-item" data-action="chat-info"><i class="fas fa-info-circle"></i> Информация о чате</div>
+                        <div class="menu-item" data-action="change-theme"><i class="fas fa-palette"></i> Сменить тему</div>
+                        <div class="menu-item" data-action="export-chat"><i class="fas fa-file-export"></i> Экспорт чата</div>
+                        <div class="menu-item" data-action="clear-chat"><i class="fas fa-trash-alt"></i> Очистить историю</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messages-container">
+                <!-- Сообщения будут добавляться через JS -->
+            </div>
+            
+            <div class="message-input-container">
+                <input type="text" class="message-input" id="message-input" placeholder="Введите сообщение...">
+                <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            
+            <!-- Модальное окно для стикеров -->
+            <div class="modal" id="stickers-modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Выберите стикер</h3>
+                    <div class="sticker-preview" id="sticker-preview">😀</div>
+                    <div class="stickers-grid" id="stickers-grid">
+                        <!-- Стикеры будут добавляться через JS -->
+                    </div>
+                    <button id="send-sticker-btn" class="sticker-send-btn">Отправить стикер</button>
+                </div>
+            </div>
+            
+            <!-- Модальное окно для файлов -->
+            <div class="modal" id="file-modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Прикрепить файл</h3>
+                    <input type="file" id="file-input" multiple>
+                    <button id="send-file-btn">Отправить файл</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
